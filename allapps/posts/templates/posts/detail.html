@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% load bootstrap4 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% block title %}
+	MyAPP | Post Details - {{post.title}}
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		{% bootstrap_messages %}
+		<div>
+			<h2 class="d-flex justify-content-end">
+				<a href="{% url 'posts:index' %}">&lt;Home</a>
+			</h2>
+		</div>
+		<hr/>
+		<h1>{{post.title}}</h1>
+		<p class="date">
+			published
+			{{ post.created }}
+			by
+			{{ post.author }}
+		</p>
+		{{ post.body|linebreaks }}
+		<hr/>
+		{% with comments.count as total_comments %}
+		<h2>
+			{{ total_comments }}
+			comment{{ total_comments|pluralize }}
+		</h2>
+		{% endwith %}
+
+		{% for comment in comments %}
+			<div class="comment">
+				<p class="info">
+					Comment #{{ forloop.counter }}
+					<small class="ml-3 text-muted">
+						by: '{{ comment.name }}' on
+						{{ comment.created }}
+					</small>
+					<strong>{{ comment.body|linebreaks }}</strong><hr/>
+				</p>
+			</div>
+			{% empty %}
+			<p>
+				There are no comments on this post!!
+				<hr/>
+			</p>
+		{% endfor %}
+		<h2>
+			Add a new comment
+		</h2>
+		<form method="POST" action="{% url 'posts:post_detail' post.slug %}" class="form">
+			{% csrf_token %}
+			{% bootstrap_form comment_form %}
+			{% buttons %}
+			<button type="submit" class="btn btn-primary">
+				Submit
+			</button>
+			{% endbuttons %}
+		</form>
+	</div>
+{% endblock %}
+
+{% block extra_js %}
+	<script type="text/javascript">
+		{% comment %}Write your Extra javascript / jQuery block here ...{% endcomment %}
+	</script>
+{% endblock %}

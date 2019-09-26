@@ -1,0 +1,25 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	/* background-color: #d3d3d3; */
+}
+
+.info{
+	margin-bottom: 0;
+}
+
+.mymessage{
+	list-style-type: none;
+}
+
+a, a:hover {
+	text-decoration: none;
+}
+
+small {
+	font-style: italic;
+}
