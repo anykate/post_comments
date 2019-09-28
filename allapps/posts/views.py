@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
+    post_form = None
     posts = Post.objects.all()
     admin = User.objects.filter(is_staff=True).first()
 
@@ -21,12 +22,7 @@ def index(request):
             this_post.save()
             return redirect('posts:index')
 
-        context = {'posts': posts, 'post_form': post_form, 'admin': admin}
-
-        return render(request, 'posts/index.html', context)
-
-    else:
-        return render(request, 'posts/index.html', {'posts': posts, 'admin': admin})
+    return render(request, 'posts/index.html', {'posts': posts, 'post_form': post_form, 'admin': admin})
 
 
 def post_detail(request, post):
