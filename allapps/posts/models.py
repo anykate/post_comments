@@ -19,9 +19,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse('posts:post_detail', args=[self.slug])
-
     def save(self, *args, **kwargs):
         title = self.title
         year = str(datetime.datetime.now().date().year)
@@ -46,6 +43,9 @@ class Post(models.Model):
 
         self.slug = slugify(title + ' ' + time)
         super(Post, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('posts:post_detail', args=[self.slug])
 
 
 class Comment(models.Model):
