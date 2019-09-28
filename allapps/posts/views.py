@@ -2,12 +2,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
-    return render(request, 'posts/index.html', {'posts': posts})
+    admin = User.objects.filter(is_staff=True).first()
+
+    # Only if at least 1 superuser exists, show the form to create posts and add the
+    # superuser as the default author for all posts.
+    # You may add a different logic for adding the form to create posts
+    if admin:
+        post_form = PostForm(data=request.POST or None)
+        if post_form.is_valid():
+            this_post = post_form.save(commit=False)
+            this_post.author = admin
+            this_post.save()
+            return redirect('posts:index')
+
+        context = {'posts': posts, 'post_form': post_form, 'admin': admin}
+
+        return render(request, 'posts/index.html', context)
+
+    else:
+        return render(request, 'posts/index.html', {'posts': posts, 'admin': admin})
 
 
 def post_detail(request, post):
@@ -22,8 +41,9 @@ def post_detail(request, post):
         new_comment.save()
         messages.info(
             request,
-            f'Your comment: \"{new_comment.body}\" has been added & '\
-            'is now pending with admin for approval !!'
+            f'Dear \"{new_comment.name}\", your comment has been added, however, it '
+            'is pending with admin for approval. Once approved, it will appear '
+            'in this post\'s comments section !!'
         )
         return redirect('posts:post_detail', this_post.slug)
 

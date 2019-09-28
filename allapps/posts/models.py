@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.utils.text import slugify
-import datetime
+from .utils import calc_slug
 
 
 # Create your models here.
@@ -20,28 +19,7 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        title = self.title
-        year = str(datetime.datetime.now().date().year)
-
-        # month = str(datetime.datetime.now().date().month)
-        month = str(datetime.datetime.now().date().strftime("%m"))
-
-        # day = str(datetime.datetime.now().date().day)
-        day = str(datetime.datetime.now().date().strftime("%d"))
-
-        # hour = str(datetime.datetime.now().hour)
-        hour = str(datetime.datetime.now().strftime("%H"))
-
-        # minute = str(datetime.datetime.now().minute)
-        minute = str(datetime.datetime.now().strftime("%M"))
-
-        # second = str(datetime.datetime.now().second)
-        second = str(datetime.datetime.now().strftime("%S"))
-
-        time = year + ' ' + month + ' ' + day + \
-            ' ' + hour + ' ' + minute + ' ' + second
-
-        self.slug = slugify(title + ' ' + time)
+        self.slug = calc_slug(self.title)
         super(Post, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
