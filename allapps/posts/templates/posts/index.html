@@ -14,7 +14,7 @@
 
 {% block content %}
 	<div class="container">
-		{% if admin %}
+		{% if post_form %}
 			<h1 class="text-center">Create Post</h1>
 			<form method="POST" action="{% url 'posts:index' %}" class="form mb-5" novalidate>
 				{% csrf_token %}

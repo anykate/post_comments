@@ -22,7 +22,7 @@ def index(request):
             this_post.save()
             return redirect('posts:index')
 
-    return render(request, 'posts/index.html', {'posts': posts, 'post_form': post_form, 'admin': admin})
+    return render(request, 'posts/index.html', {'posts': posts, 'post_form': post_form})
 
 
 def post_detail(request, post):
