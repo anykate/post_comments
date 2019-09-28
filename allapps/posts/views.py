@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 def index(request):
     post_form = None
     posts = Post.objects.all()
-    admin = User.objects.filter(is_staff=True).first()
+    admin = User.objects.filter(is_staff=True, is_superuser=True).first()
 
     # Only if at least 1 superuser exists, show the form to create posts and add the
     # superuser as the default author for all posts.
